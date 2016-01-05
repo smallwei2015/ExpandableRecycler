@@ -21,6 +21,7 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder
     private Context context;
     private List<Tree<?>> list;
     private RecyclerView recyclerView;
+    private MyItemAnimator animator;
 
     public TreeAdapter(Context context, List<Tree<?>> list) {
         this.context = context;
@@ -57,6 +58,7 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder
                 holder.child_text.setText((String)tree.getData());
                 break;
         }
+        holder.position = position;
     }
 
     @Override
@@ -72,7 +74,9 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+        animator = new MyItemAnimator();
         this.recyclerView = recyclerView;
+        recyclerView.setItemAnimator(animator);
     }
 
     @Override
@@ -105,6 +109,11 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder
         private CheckBox expand;
         private TextView group_text;
         private TextView child_text;
+        private int position;
+
+        public int getMyPosition() {
+            return position;
+        }
 
         public TreeViewHolder(View itemView) {
             super(itemView);
