@@ -1,5 +1,6 @@
 package com.jash.expandablerecycler;
 
+import android.content.Intent;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,7 +11,7 @@ import android.widget.FrameLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TreeAdapter adapter;
     private TreeAdapter.TreeViewHolder holder;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         recycler.setAdapter(adapter);
         holder = adapter.onCreateViewHolder(recycler, 0);
         holder.itemView.setVisibility(View.GONE);
-        holder.itemView.setClickable(false);
+        holder.itemView.setOnClickListener(this);
         frame.addView(holder.itemView);
         recycler.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -61,5 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        startActivity(new Intent(this, RefreshActivity.class));
     }
 }
