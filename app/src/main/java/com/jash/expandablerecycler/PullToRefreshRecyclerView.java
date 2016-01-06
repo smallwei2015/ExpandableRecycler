@@ -63,12 +63,17 @@ public class PullToRefreshRecyclerView extends PullToRefreshBase<RecyclerView> {
     protected boolean isReadyForPullStart() {
         RecyclerView recyclerView = getRefreshableView();
         RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        //没有数据时可以下拉刷新
         if (adapter == null || adapter.getItemCount() == 0) {
             return true;
         } else {
+            //第一个可显示的控件
             View view = recyclerView.getChildAt(0);
+            //第一个可显示的控件在adapter中的位置
             int position = recyclerView.getChildAdapterPosition(view);
+            //如果的第一个item
             if (position == 0) {
+                //显示完整
                 return view.getTop() == 0;
             }
         }
@@ -83,11 +88,14 @@ public class PullToRefreshRecyclerView extends PullToRefreshBase<RecyclerView> {
     protected boolean isReadyForPullEnd() {
         RecyclerView recyclerView = getRefreshableView();
         RecyclerView.Adapter adapter = recyclerView.getAdapter();
+
         if (adapter == null || adapter.getItemCount() == 0) {
             return false;
         } else {
+
             View view = recyclerView.getChildAt(recyclerView.getChildCount() - 1);
             int position = recyclerView.getChildAdapterPosition(view);
+
             if (position == adapter.getItemCount() - 1){
                 return view.getBottom() <= recyclerView.getHeight();
             }

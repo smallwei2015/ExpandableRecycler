@@ -49,8 +49,10 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder
     @Override
     public void onBindViewHolder(TreeViewHolder holder, int position) {
         Tree<?> tree = list.get(position);
-        switch (tree.getLevel()){
+        holder.itemView.setPadding(tree.getLevel() * 50, 0, 0, 0);
+        switch (getItemViewType(position)){
             case 0:
+                holder.group_text.setTextSize(20 - tree.getLevel() * 2);
                 holder.group_text.setText((String)tree.getData());
                 holder.expand.setChecked(tree.isExpand());
                 break;
@@ -68,7 +70,7 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        return list.get(position).getLevel();
+        return list.get(position).isExpandable()?0:1;
     }
 
     @Override
@@ -98,9 +100,25 @@ public class TreeAdapter extends RecyclerView.Adapter<TreeAdapter.TreeViewHolder
     public void addAll(int position, Collection<? extends Tree<?>> collection){
         list.addAll(position, collection);
         notifyItemRangeInserted(position, collection.size());
+        int i = 1;
+        for (Tree<?> tree : collection) {
+            if (tree.isExpand()) {
+                addAll(position + i, tree.getChildren());
+                i += tree.getChildren().size();
+            }
+            i++;
+        }
     }
 
     public void removeAll(int position, Collection<? extends Tree<?>> collection){
+        int i = 1;
+        for (Tree<?> tree : collection) {
+            if (tree.isExpand()) {
+                removeAll(position + i, tree.getChildren());
+                i += tree.getChildren().size();
+            }
+            i++;
+        }
         list.removeAll(collection);
         notifyItemRangeRemoved(position, collection.size());
     }
